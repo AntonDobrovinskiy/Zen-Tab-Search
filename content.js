@@ -94,11 +94,26 @@ function showOmnibar() {
     console.log("Received tabs:", tabs.length, "tabs:", JSON.stringify(tabs.map(t => ({ id: t.id, title: t.title }))));
     let allTabs = tabs.filter(tab => Number.isInteger(tab.id) && tab.id >= 0); // Filter out invalid tabs
 
+    /* Initialize selection tracking */
+    let selectedIndex = -1;
+
+    /* Helper to update selection */
+    function updateSelection() {
+      const items = list.querySelectorAll("li");
+      items.forEach((item) => item.classList.remove("selected"));
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        items[selectedIndex].classList.add("selected");
+        items[selectedIndex].scrollIntoView({ block: "nearest" });
+        console.log("Selected index updated to:", selectedIndex, "tabId:", items[selectedIndex].dataset.tabId);
+      }
+    }
+
     /* Dynamic list rendering
      * - Efficiently updates DOM only when necessary
      * - Handles both keyboard and mouse interaction
      * - Provides visual feedback for selected items
      * - Implements smooth scrolling for better UX
+     * - Auto-selects first item for immediate Enter key usage
      */
     function renderTabs(filteredTabs) {
       console.log("Rendering tabs, count:", filteredTabs.length);
@@ -137,6 +152,14 @@ function showOmnibar() {
 
         list.appendChild(li);
       });
+
+      /* Auto-select first item if any results exist */
+      if (filteredTabs.length > 0) {
+        selectedIndex = 0;
+        updateSelection();
+      } else {
+        selectedIndex = -1;
+      }
     }
 
     /* Tab switching logic
@@ -211,17 +234,6 @@ function showOmnibar() {
         e.preventDefault();
       }
     });
-
-    /* Helper to update selection */
-    function updateSelection() {
-      const items = list.querySelectorAll("li");
-      items.forEach((item) => item.classList.remove("selected"));
-      if (selectedIndex >= 0 && selectedIndex < items.length) {
-        items[selectedIndex].classList.add("selected");
-        items[selectedIndex].scrollIntoView({ block: "nearest" });
-        console.log("Selected index updated to:", selectedIndex, "tabId:", items[selectedIndex].dataset.tabId);
-      }
-    }
   }).catch((error) => {
     console.error("Error fetching tabs:", error);
   });
