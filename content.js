@@ -280,7 +280,6 @@ function showOmnibar() {
     });
 
     /* Keyboard navigation (up/down/left/right/enter) - remove Escape handling here */
-    let selectedIndex = -1;
     input.addEventListener("keydown", (e) => {
       const items = list.querySelectorAll("li");
       const numItems = items.length;
