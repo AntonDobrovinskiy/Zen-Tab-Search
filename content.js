@@ -10,76 +10,19 @@ console.log("Content script loaded at", new Date().toISOString());
 /* Enhanced fuzzy matching algorithm:
  * - Case-insensitive matching
  * - Characters must appear in order but don't need to be consecutive
- * - Scores matches based on:
- *   - Exact word matches (highest priority)
- *   - Word boundary matches
- *   - Character proximity
- *   - Early matches in string
- * - Similar to fzf behavior
+ * - More intuitive than exact matching
+ * - Similar to Sublime Text's search behavior
  */
-function fuzzyMatchWithScore(str, queryLowerCase) {
-
+function fuzzyMatch(str, query) {
   str = str.toLowerCase();
-
-  // Check if all characters appear in order
-  let strIndex = 0;
-  let matchPositions = [];
-
-  for (let queryIndex = 0; queryIndex < queryLowerCase.length; queryIndex++) {
-    const char = queryLowerCase[queryIndex];
-    const found = str.indexOf(char, strIndex);
-
-    // no character found - no match
-    if (found === -1) return { matches: false, score: 0 };
-
-    matchPositions.push(found);
-    strIndex = found + 1;
+  query = query.toLowerCase();
+  let i = 0;
+  for (let char of query) {
+    i = str.indexOf(char, i);
+    if (i === -1) return false;
+    i++;
   }
-
-  // Calculate score based on match quality
-  let score = 0;
-
-  // 1. Exact substring match bonus (highest priority)
-  if (str.includes(queryLowerCase)) {
-    score += 1000;
-    // Additional bonus if it's at word boundary
-    const queryIndex = str.indexOf(queryLowerCase);
-    if (queryIndex === 0 || /\s/.test(str[queryIndex - 1])) {
-      score += 500;
-    }
-  }
-
-  // 2. Word boundary matches
-  const words = str.split(/\s+/);
-  for (const word of words) {
-    if (word.startsWith(queryLowerCase)) {
-      score += 200;
-    } else if (word.includes(queryLowerCase)) {
-      score += 100;
-    }
-  }
-
-  // 3. Character proximity bonus (consecutive chars get higher score)
-  let consecutiveBonus = 0;
-  for (let i = 1; i < matchPositions.length; i++) {
-    if (matchPositions[i] === matchPositions[i - 1] + 1) {
-      consecutiveBonus += 50;
-    }
-  }
-  score += consecutiveBonus;
-
-  // 4. Early match bonus (matches near beginning of string)
-  const firstMatchPosition = matchPositions[0];
-  score += Math.max(0, 100 - firstMatchPosition * 2);
-
-  // 5. Length penalty (shorter strings with same matches score higher)
-  score += Math.max(0, 200 - str.length);
-
-  // 6. Compact match bonus (all matches within smaller span)
-  const matchSpan = matchPositions[matchPositions.length - 1] - matchPositions[0] + 1;
-  score += Math.max(0, 100 - matchSpan);
-
-  return { matches: true, score };
+  return true;
 }
 
 /* Main UI component initialization
@@ -133,7 +76,7 @@ function showOmnibar() {
       e.stopPropagation();
     }
   };
-
+  
   document.addEventListener("keydown", escListener);
 
   /* Handle tab visibility changes */
@@ -143,7 +86,7 @@ function showOmnibar() {
       closeOmnibar();
     }
   };
-
+  
   document.addEventListener("visibilitychange", visibilityListener);
 
   /* Fetch tabs */
@@ -151,26 +94,11 @@ function showOmnibar() {
     console.log("Received tabs:", tabs.length, "tabs:", JSON.stringify(tabs.map(t => ({ id: t.id, title: t.title }))));
     let allTabs = tabs.filter(tab => Number.isInteger(tab.id) && tab.id >= 0); // Filter out invalid tabs
 
-    /* Initialize selection tracking */
-    let selectedIndex = -1;
-
-    /* Helper to update selection */
-    function updateSelection() {
-      const items = list.querySelectorAll("li");
-      items.forEach((item) => item.classList.remove("selected"));
-      if (selectedIndex >= 0 && selectedIndex < items.length) {
-        items[selectedIndex].classList.add("selected");
-        items[selectedIndex].scrollIntoView({ block: "nearest" });
-        console.log("Selected index updated to:", selectedIndex, "tabId:", items[selectedIndex].dataset.tabId);
-      }
-    }
-
     /* Dynamic list rendering
      * - Efficiently updates DOM only when necessary
      * - Handles both keyboard and mouse interaction
      * - Provides visual feedback for selected items
      * - Implements smooth scrolling for better UX
-     * - Auto-selects first item for immediate Enter key usage
      */
     function renderTabs(filteredTabs) {
       console.log("Rendering tabs, count:", filteredTabs.length);
@@ -209,14 +137,6 @@ function showOmnibar() {
 
         list.appendChild(li);
       });
-
-      /* Auto-select first item if any results exist */
-      if (filteredTabs.length > 0) {
-        selectedIndex = 0;
-        updateSelection();
-      } else {
-        selectedIndex = -1;
-      }
     }
 
     /* Tab switching logic
@@ -250,33 +170,15 @@ function showOmnibar() {
     input.addEventListener("input", (e) => {
       const query = e.target.value;
       console.log("Filtering tabs with query:", query);
-
-      if (!query) {
+      if (query) {
+        const filtered = allTabs.filter((tab) =>
+          fuzzyMatch(tab.title || "", query) || fuzzyMatch(tab.url || "", query)
+        );
+        console.log("Filtered tabs:", filtered.length, "tabs:", JSON.stringify(filtered.map(t => ({ id: t.id, title: t.title }))));
+        renderTabs(filtered);
+      } else {
         renderTabs(allTabs);
-        return;
       }
-      const queryLowerCase = query.toLowerCase();
-
-      // score tabs
-      const scored = [];
-      for (let i = 0; i < allTabs.length; i++) {
-        const tab = allTabs[i];
-
-        const titleMatch = fuzzyMatchWithScore(tab.title || "", queryLowerCase);
-        const urlMatch = fuzzyMatchWithScore(tab.url || "", queryLowerCase);
-
-        if (titleMatch.matches || urlMatch.matches) {
-          scored.push({
-            ...tab,
-            // Use the better of title or URL match
-            score: Math.max(titleMatch.score, urlMatch.score),
-          });
-        }
-      }
-      const sorted = scored.sort((a, b) => b.score - a.score);
-
-      console.log("Filtered tabs:", sorted.length, "tabs:", JSON.stringify(sorted.map(t => ({ id: t.id, title: t.title, score: t.score }))));
-      renderTabs(sorted);
     });
 
     /* Keyboard navigation (up/down/left/right/enter) - remove Escape handling here */
@@ -285,7 +187,7 @@ function showOmnibar() {
       const items = list.querySelectorAll("li");
       const numItems = items.length;
 
-      if (e.key === "ArrowDown" || e.key === "Tab") {
+      if (e.key === "ArrowDown") {
         selectedIndex = selectedIndex < numItems - 1 ? selectedIndex + 1 : 0;
         updateSelection();
         e.preventDefault();
@@ -309,6 +211,17 @@ function showOmnibar() {
         e.preventDefault();
       }
     });
+
+    /* Helper to update selection */
+    function updateSelection() {
+      const items = list.querySelectorAll("li");
+      items.forEach((item) => item.classList.remove("selected"));
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        items[selectedIndex].classList.add("selected");
+        items[selectedIndex].scrollIntoView({ block: "nearest" });
+        console.log("Selected index updated to:", selectedIndex, "tabId:", items[selectedIndex].dataset.tabId);
+      }
+    }
   }).catch((error) => {
     console.error("Error fetching tabs:", error);
   });
@@ -340,4 +253,3 @@ browser.runtime.onMessage.addListener((message) => {
     showOmnibar();
   }
 });
-

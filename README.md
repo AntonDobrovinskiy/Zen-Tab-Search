@@ -1,5 +1,3 @@
-![](https://github.com/AntonDobrovinskiy/Zen-Tab-Search/blob/main/Screenshot%202025-09-07%20at%2000.46.40.png?raw=true)
-
 # 🔍 Zen Tab Search
 
 A powerful tab management extension for Zen Browser that provides lightning-fast fuzzy search capabilities through a modern omnibar interface.
