@@ -22,7 +22,7 @@ A powerful tab management extension for Zen Browser that provides lightning-fast
   - `↑/↓`: Navigate through results
   - `←/→`: Jump 10 items at a time
   - `Enter`: Switch to selected tab
-  - `Esc`: Close search (single press)
+  - `Esc`: Close search
 
 ## 🚀 Installation
 
