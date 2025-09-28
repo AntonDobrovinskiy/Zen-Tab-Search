@@ -187,7 +187,7 @@ function showOmnibar() {
       const items = list.querySelectorAll("li");
       const numItems = items.length;
 
-      if (e.key === "ArrowDown") {
+      if (e.key === "ArrowDown"  || e.key === "Tab") {
         selectedIndex = selectedIndex < numItems - 1 ? selectedIndex + 1 : 0;
         updateSelection();
         e.preventDefault();
