@@ -8,6 +8,7 @@ A powerful tab management extension for Zen Browser that provides lightning-fast
 - **Fuzzy Search Algorithm**: Find tabs even with typos or partial matches
 - **Real-time Filtering**: Results update instantly as you type
 - **Smart Matching**: Searches both tab titles and URLs
+- **Close Tabs**: Close tabs directly from the search results by clicking the close icon
 - **Keyboard Navigation**: Full keyboard support for quick tab switching
 
 ### User Interface
