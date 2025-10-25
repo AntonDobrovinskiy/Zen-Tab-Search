@@ -55,7 +55,7 @@
 
 .zen-tab-item {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   gap: 12px;
   align-items: center;
   padding: 12px;
@@ -67,6 +67,22 @@
 .zen-tab-item:hover,
 .zen-tab-item.selected {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.zen-close-btn {
+  color: #aaa;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  justify-self: end;
+}
+
+.zen-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .zen-favicon {

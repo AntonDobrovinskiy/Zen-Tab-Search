@@ -95,5 +95,21 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ error: error.message });
       });
     return true; /* Keep the message channel open for async response */
+  } else if (message.type === "closeTab") {
+    const tabId = message.tabId;
+    if (!Number.isInteger(tabId) || tabId < 0) {
+      console.error("Invalid tabId for closing:", tabId);
+      sendResponse({ error: "Invalid tabId" });
+      return true;
+    }
+    browser.tabs.remove(tabId)
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((error) => {
+        console.error("Error closing tab:", error);
+        sendResponse({ error: error.message });
+      });
+    return true;
   }
 });

@@ -129,14 +129,26 @@ function showOmnibar() {
           url.textContent = tab.url ? new URL(tab.url).hostname : "No URL";
           url.className = "zen-url";
 
+          const closeBtn = document.createElement("span");
+          closeBtn.className = "zen-close-btn";
+          closeBtn.innerHTML = "&times;";
+
           li.appendChild(title);
           li.appendChild(url);
+          li.appendChild(closeBtn);
 
           /* Click to switch */
           li.addEventListener("click", () => {
             const tabId = parseInt(li.dataset.tabId, 10);
             /* console.log("Clicked tabId:", tabId, "title:", tab.title); */
             switchToTab(tabId);
+          });
+
+          closeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const tabId = parseInt(li.dataset.tabId, 10);
+            browser.runtime.sendMessage({ type: "closeTab", tabId });
+            li.remove();
           });
 
           list.appendChild(li);
