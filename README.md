@@ -1,46 +1,47 @@
-# 🔍 Zen Tab Search
+# Zen Tab Search
 
-A powerful tab management extension for Zen Browser that provides lightning-fast fuzzy search capabilities through a modern omnibar interface.
+Tabs everywhere? Breathe in, breathe out — and let Zen Tab Search find the one you actually need.
 
-## ✨ Features
+## What it does
 
-### Quick Tab Search
-- **Fuzzy Search Algorithm**: Find tabs even with typos or partial matches
-- **Real-time Filtering**: Results update instantly as you type
-- **Smart Matching**: Searches both tab titles and URLs
-- **Close Tabs**: Close tabs directly from the search results by clicking the close icon
-- **Keyboard Navigation**: Full keyboard support for quick tab switching
+- Fuzzy search through your tabs like a ninja with good memory.
+- Finds what you mean, not just what you type.
+- Highlights matches because we're not barbarians.
 
-### User Interface
-- **Modern Design**: Clean, minimal interface with blur effect
-- **Adaptive Layout**: Omnibar adjusts to content size
-- **Visual Feedback**: Clear highlighting of selected items
-- **Favicon Support**: Quick visual recognition of tabs
+Keyboard shortcut: press `Alt+T` to summon the search omnibar.
 
-### Navigation
-- **Keyboard Shortcuts**:
-  - `Alt+T` (Windows/Linux) or `Ctrl+T` (macOS): Open search
-  - `↑/↓`: Navigate through results
-  - `←/→`: Jump 10 items at a time
-  - `Enter`: Switch to selected tab
-  - `Esc`: Close search
+## Install the clarity
 
-## 🚀 Installation
+- Firefox Add-ons: [addons.mozilla.org/en-US/firefox/addon/zen-tab-search](https://addons.mozilla.org/en-US/firefox/addon/zen-tab-search/)
+- GitHub: [https://github.com/AntonDobrovinskiy/Zen-Tab-Search](https://github.com/AntonDobrovinskiy/Zen-Tab-Search)
 
-[Firefox Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/zen-tab-search/)
+## Features (short, like your patience for tab chaos)
 
-## 🛠️ Technical Details
+- **Fuzzy search**: Typos welcome. We're understanding.
+- **Relevance scoring**: Best matches rise to the top.
+- **Match highlighting**: See exactly what matched.
+- **Lightweight**: No memory hoarding, no drama.
+- **Keyboard first**: Tab through life efficiently.
 
-- **Performance**: Optimized fuzzy search algorithm
-- **Memory**: Minimal memory footprint
-- **Browser API**: Uses WebExtensions API for cross-browser compatibility
-- **Event Handling**: Streamlined keyboard event management with single-press Escape
-- **User Experience**: Immediate response to keyboard shortcuts
+## Keyboard shortcuts
 
-## 🤝 Contributing
+| Key | Action |
+|-----|--------|
+| `Alt+T` | Open search |
+| `↑/↓` | Navigate results |
+| `←/→` | Jump 10 items |
+| `Enter` | Switch to tab |
+| `Cmd/Ctrl+Enter` | Open in new tab |
+| `Esc` | Close search |
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Contribute
 
-## 📄 License
+Bugs, ideas, or a burning desire to find tabs by humming? Issues and PRs welcome.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## License
+
+MIT. Find tabs, achieve inner peace.
+
+---
+
+P.S. Only shows tabs from your current window. Because sometimes you need focus, not all 347 tabs at once.

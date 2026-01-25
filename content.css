@@ -1,139 +1,204 @@
-/* Modern, youthful design with blur and darkening */
+/* Modern design with blur, dark/light theme support */
+
+:root {
+  --zen-bg-overlay: rgba(0, 0, 0, 0.6);
+  --zen-bg-omnibar: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+  --zen-bg-input: #333;
+  --zen-bg-item-hover: rgba(255, 255, 255, 0.1);
+  --zen-bg-item-selected: rgba(255, 255, 255, 0.15);
+  --zen-text-primary: #fff;
+  --zen-text-secondary: #aaa;
+  --zen-text-muted: #888;
+  --zen-text-highlight: #4fc3f7;
+  --zen-close-color: #aaa;
+  --zen-close-hover: #fff;
+  --zen-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --zen-scrollbar: #555;
+  --zen-scrollbar-hover: #777;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --zen-bg-overlay: rgba(0, 0, 0, 0.4);
+    --zen-bg-omnibar: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+    --zen-bg-input: #e0e0e0;
+    --zen-bg-item-hover: rgba(0, 0, 0, 0.08);
+    --zen-bg-item-selected: rgba(0, 0, 0, 0.12);
+    --zen-text-primary: #1a1a1a;
+    --zen-text-secondary: #666;
+    --zen-text-muted: #999;
+    --zen-text-highlight: #0288d1;
+    --zen-close-color: #888;
+    --zen-close-hover: #333;
+    --zen-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --zen-scrollbar: #ccc;
+    --zen-scrollbar-hover: #aaa;
+  }
+}
 
 .zen-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-    animation: fadeIn 0.2s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--zen-bg-overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10vh;
+  z-index: 999999;
+  animation: zenFadeIn 0.2s ease-out;
 }
 
 .zen-omnibar {
-    background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    width: 60vw;
-    max-width: 600px;
-    min-height: 200px;
-    max-height: 600px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    overflow: hidden;
+  background: var(--zen-bg-omnibar);
+  border-radius: 16px;
+  box-shadow: var(--zen-shadow);
+  width: 60vw;
+  max-width: 600px;
+  min-height: 60px;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
 }
 
 .zen-input {
-    background: #333;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 18px;
-    padding: 12px;
-    margin-bottom: 16px;
-    outline: none;
+  background: var(--zen-bg-input);
+  border: none;
+  border-radius: 8px;
+  color: var(--zen-text-primary);
+  font-size: 18px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.zen-input:focus {
+  box-shadow: 0 0 0 2px var(--zen-text-highlight);
 }
 
 .zen-input::placeholder {
-    color: #888;
+  color: var(--zen-text-muted);
+}
+
+.zen-count {
+  color: var(--zen-text-secondary);
+  font-size: 12px;
+  margin-bottom: 8px;
+  padding: 0 4px;
 }
 
 .zen-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .zen-tab-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    gap: 12px;
-    align-items: center;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 .zen-tab-item:hover,
 .zen-tab-item.selected {
-    background: rgba(255, 255, 255, 0.1);
+  background: var(--zen-bg-item-selected);
 }
 
-.zen-close-btn {
-    color: #aaa;
-    font-size: 22px;
-    font-weight: bold;
-    padding: 0 8px;
-    border-radius: 4px;
-    transition:
-        background 0.2s,
-        color 0.2s;
-    cursor: pointer;
-    justify-self: end;
-}
-
-.zen-close-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+.zen-tab-item:hover {
+  background: var(--zen-bg-item-hover);
 }
 
 .zen-favicon {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    margin-bottom: 0rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .zen-title {
-    color: #fff;
-    font-size: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 16px;
+  color: var(--zen-text-primary);
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zen-title strong {
+  color: var(--zen-text-highlight);
+  font-weight: 600;
 }
 
 .zen-url {
-    color: #aaa;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: var(--zen-text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.zen-close-btn {
+  color: var(--zen-close-color);
+  font-size: 20px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+  justify-self: end;
+  line-height: 1;
 }
 
-/* Scrollbar styling for modern look */
+.zen-close-btn:hover {
+  background: rgba(255, 80, 80, 0.2);
+  color: #ff5252;
+}
+
+.zen-empty {
+  color: var(--zen-text-secondary);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+}
+
+@keyframes zenFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar */
 .zen-list::-webkit-scrollbar {
-    width: 8px;
+  width: 6px;
 }
 
 .zen-list::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 .zen-list::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 4px;
+  background: var(--zen-scrollbar);
+  border-radius: 3px;
 }
 
 .zen-list::-webkit-scrollbar-thumb:hover {
-    background: #777;
+  background: var(--zen-scrollbar-hover);
 }
