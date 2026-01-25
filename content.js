@@ -57,7 +57,7 @@ function calculateScore(tab, query) {
 function highlightText(text, query) {
   if (!query) return text;
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
-  return text.replace(regex, "<strong>$1</strong>");
+  return text.replace(regex, "<mark>$1</mark>");
 }
 
 function showOmnibar() {
@@ -122,11 +122,16 @@ function showOmnibar() {
       li.className = "zen-tab-item";
       li.dataset.tabId = tab.id;
 
-      if (tab.favIconUrl) {
+      if (tab.favIconUrl && tab.favIconUrl.trim()) {
+        const favIcon = document.createElement("div");
+        favIcon.className = "zen-favicon";
         const img = document.createElement("img");
         img.src = tab.favIconUrl;
-        img.className = "zen-favicon";
-        li.appendChild(img);
+        img.onerror = () => {
+          favIcon.style.visibility = "hidden";
+        };
+        favIcon.appendChild(img);
+        li.appendChild(favIcon);
       }
 
       const title = document.createElement("span");

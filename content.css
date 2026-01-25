@@ -126,6 +126,15 @@
   height: 20px;
   border-radius: 4px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zen-favicon img {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
 }
 
 .zen-title {
@@ -136,9 +145,13 @@
   text-overflow: ellipsis;
 }
 
+.zen-title mark,
 .zen-title strong {
+  background: rgba(79, 195, 247, 0.25);
   color: var(--zen-text-highlight);
   font-weight: 600;
+  border-radius: 3px;
+  padding: 0 2px;
 }
 
 .zen-url {
