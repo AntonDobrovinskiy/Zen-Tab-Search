@@ -1,12 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Zen Tab Search",
-  "version": "1.91",
+  "version": "1.92",
   "description": "Fuzzy search for tabs in Zen Browser with a modern omnibar overlay",
-  "permissions": [
-    "tabs",
-    "<all_urls>"
-  ],
+  "permissions": ["tabs", "<all_urls>"],
   "commands": {
     "show-omnibar": {
       "suggested_key": {
@@ -17,25 +14,18 @@
     }
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ],
+    "scripts": ["background.js"],
     "persistent": false
   },
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "css": [
-        "content.css"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
       "run_at": "document_end"
     }
   ],
+  "web_accessible_resources": ["icons/default-favicon.svg"],
   "browser_specific_settings": {
     "gecko": {
       "id": "zen-tab-search@extension.example",

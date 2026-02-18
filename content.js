@@ -122,17 +122,12 @@ function showOmnibar() {
       li.className = "zen-tab-item";
       li.dataset.tabId = tab.id;
 
-      if (tab.favIconUrl && tab.favIconUrl.trim()) {
-        const favIcon = document.createElement("div");
-        favIcon.className = "zen-favicon";
-        const img = document.createElement("img");
-        img.src = tab.favIconUrl;
-        img.onerror = () => {
-          favIcon.style.visibility = "hidden";
-        };
-        favIcon.appendChild(img);
-        li.appendChild(favIcon);
-      }
+      const favIcon = document.createElement("div");
+      favIcon.className = "zen-favicon";
+      const img = document.createElement("img");
+      img.src = tab.favIconUrl && tab.favIconUrl.trim() ? tab.favIconUrl : browser.runtime.getURL("icons/default-favicon.svg");
+      favIcon.appendChild(img);
+      li.appendChild(favIcon);
 
       const title = document.createElement("span");
       title.innerHTML = highlightText(tab.title || "Untitled", query);
