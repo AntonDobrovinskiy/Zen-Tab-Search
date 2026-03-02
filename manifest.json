@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
   "name": "Zen Tab Search",
-  "version": "1.92",
+  "version": "1.93",
   "description": "Fuzzy search for tabs in Zen Browser with a modern omnibar overlay",
-  "permissions": ["tabs", "<all_urls>"],
+  "permissions": ["tabs", "<all_urls>", "tabGroups"],
   "commands": {
     "show-omnibar": {
       "suggested_key": {
