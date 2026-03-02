@@ -20,31 +20,40 @@ function fuzzyMatch(str, query) {
 function calculateScore(tab, query) {
   const title = (tab.title || "").toLowerCase();
   const url = (tab.url || "").toLowerCase();
+  const groupTitle = (tab.groupTitle || "").toLowerCase();
   const queryLower = query.toLowerCase();
 
   let score = 0;
 
   // Exact prefix match (highest)
-  if (title.toLowerCase().startsWith(queryLower)) score += 100;
-  if (url.toLowerCase().startsWith(queryLower)) score += 90;
+  if (title.startsWith(queryLower)) score += 100;
+  if (url.startsWith(queryLower)) score += 90;
+  if (groupTitle.startsWith(queryLower)) score += 80;
 
   // Contains query
   if (title.includes(queryLower)) score += 50;
   if (url.includes(queryLower)) score += 40;
+  if (groupTitle.includes(queryLower)) score += 35;
 
   // Fuzzy match bonus
   if (fuzzyMatch(title, query)) score += 30;
   if (fuzzyMatch(url, query)) score += 20;
+  if (fuzzyMatch(groupTitle, query)) score += 15;
 
   // Word-by-word match (higher score = more words match)
   const queryWords = queryLower.split(/\s+/);
   const titleWords = title.split(/\s+/);
   const urlWords = url.split(/\s+/);
+  const groupWords = groupTitle.split(/\s+/);
 
   let matchedWords = 0;
   for (const qw of queryWords) {
     if (qw.length < 2) continue;
-    if (titleWords.some((tw) => tw.includes(qw)) || urlWords.some((uw) => uw.includes(qw))) {
+    if (
+      titleWords.some((tw) => tw.includes(qw)) ||
+      urlWords.some((uw) => uw.includes(qw)) ||
+      groupWords.some((gw) => gw.includes(qw))
+    ) {
       matchedWords++;
     }
   }
@@ -142,6 +151,16 @@ function showOmnibar() {
       }
       url.className = "zen-url";
       li.appendChild(url);
+
+      if (tab.groupTitle) {
+        const group = document.createElement("span");
+        group.textContent = tab.groupTitle;
+        group.className = "zen-group-badge";
+        if (tab.groupColor) {
+          group.dataset.groupColor = tab.groupColor;
+        }
+        li.appendChild(group);
+      }
 
       const closeBtn = document.createElement("span");
       closeBtn.className = "zen-close-btn";

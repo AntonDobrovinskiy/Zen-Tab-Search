@@ -26,14 +26,40 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "getTabs") {
       try {
         const tabs = await browser.tabs.query({ currentWindow: true });
+        const groupsById = new Map();
+
+        if (browser.tabGroups && typeof browser.tabGroups.query === "function") {
+          const tabGroupIds = [...new Set(tabs.map((tab) => tab.groupId).filter((groupId) => Number.isInteger(groupId) && groupId >= 0))];
+
+          if (tabGroupIds.length > 0) {
+            try {
+              const groups = await browser.tabGroups.query({});
+              groups.forEach((group) => {
+                groupsById.set(group.id, group);
+              });
+            } catch (error) {
+              console.error("Error querying tab groups:", error);
+            }
+          }
+        }
+
         sendResponse(
-          tabs.map((tab) => ({
-            id: tab.id,
-            title: tab.title || "Untitled",
-            url: tab.url || "",
-            favIconUrl: tab.favIconUrl || "",
-            windowId: tab.windowId,
-          })),
+          tabs.map((tab) => {
+            const groupId = Number.isInteger(tab.groupId) ? tab.groupId : -1;
+            const group = groupsById.get(groupId);
+
+            return {
+              id: tab.id,
+              title: tab.title || "Untitled",
+              url: tab.url || "",
+              favIconUrl: tab.favIconUrl || "",
+              windowId: tab.windowId,
+              audible: tab.audible || false,
+              groupId,
+              groupTitle: group?.title || "",
+              groupColor: group?.color || "",
+            };
+          }),
         );
       } catch (error) {
         console.error("Error querying tabs:", error);
